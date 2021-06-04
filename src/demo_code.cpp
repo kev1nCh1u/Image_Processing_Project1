@@ -4,7 +4,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/xfeatures2d.hpp>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 #define DRAW_MATCHES
 
@@ -36,8 +36,8 @@ void calForRotationMatrix(const Eigen::Matrix<float, 3, 1> &params, Eigen::Matri
 void pixel2photo(const std::vector<DMatch> &matches, const std::pair<uint, uint> &pixelSize, const std::vector<KeyPoint> &kp1, const std::vector<KeyPoint> &kp2, std::vector<Eigen::Matrix<float, 3, 1>> &opt1, std::vector<Eigen::Matrix<float, 3, 1>>&opt2);
 
 int main() {
-	Mat img1 = imread("../image/DJI_1.jpg", IMREAD_GRAYSCALE);
-	Mat img2 = imread("../image/DJI_2.jpg", IMREAD_GRAYSCALE);
+	Mat img1 = imread("img/DJI_1.JPG", IMREAD_GRAYSCALE);
+	Mat img2 = imread("img/DJI_2.JPG", IMREAD_GRAYSCALE);
 	if (img1.empty() || img2.empty()) {
 		std::cout << "Can't open the images!\n";
 		return -1;
