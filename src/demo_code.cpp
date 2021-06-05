@@ -43,8 +43,15 @@ int main() {
 		return -1;
 	}
 	
-	int hessianThreshold = 600; //https://stackoverflow.com/questions/17613723/what-is-the-meaning-of-minhessian-surffeaturedetector
-	Ptr<SURF> detector = SURF::create(hessianThreshold);
+	// int hessianThreshold = 600; //https://stackoverflow.com/questions/17613723/what-is-the-meaning-of-minhessian-surffeaturedetector
+	// Ptr<SURF> detector = SURF::create(hessianThreshold);
+	// std::vector<KeyPoint> keypoints1, keypoints2;
+	// Mat descriptors1, descriptors2;
+	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
+	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
+
+	int numFeatures = 600;
+	Ptr<SIFT> detector = SIFT::create();
 	std::vector<KeyPoint> keypoints1, keypoints2;
 	Mat descriptors1, descriptors2;
 	detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
@@ -175,7 +182,6 @@ int main() {
 		pos_r(2, 0) += xbar(1, 0);
 		rot_r(0, 0) += xbar(2, 0);
 		rot_r(1, 0) += xbar(3, 0);
-// std::cout << "\n=============== test ================" << std::endl;
 		rot_r(2, 0) += xbar(4, 0);
 
 		protectNumber++;
@@ -183,14 +189,14 @@ int main() {
 		endCondition = 1;
 		for (size_t i = 0; i < xbar.rows(); ++i) {
 			if (xbar(i, 0) > 1e-6) { 
-				endCondition = 0; 
+				endCondition = 0;
 				break;
 			}
 		}
 	} while (protectNumber < 1000 && !endCondition);
 
 	auto V = A.transpose() * Na.inverse() * (W - B * xbar);
-	std::cout << "\n" << pos_r << "\n" << rot_r << "\n";
+	std::cout << "\n==========pos==========\n" << pos_r << "\n==========rot==========\n" << rot_r << "\n";
 
 	return 0;
 }
