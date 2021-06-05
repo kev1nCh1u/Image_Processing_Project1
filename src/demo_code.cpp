@@ -4,7 +4,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/xfeatures2d.hpp>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 #define DRAW_MATCHES
 
@@ -49,8 +49,8 @@ int main() {
 	Mat descriptors1, descriptors2;
 	detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
 	detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
-	std::cout << "Number of key points in left image" << keypoints1.size() << "\n";
-	std::cout << "Number of key points in right image" << keypoints2.size() << "\n";
+	std::cout << "Number of key points in left image " << keypoints1.size() << "\n";
+	std::cout << "Number of key points in right image " << keypoints2.size() << "\n";
 	
 	Mat img12(cv::Size(img1.cols + img2.cols, img1.rows), CV_8UC3);
 	drawKeypoints(img1, keypoints1, img12(cv::Rect(0, 0, img1.cols, img1.rows)), Scalar(0, 255, 255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
@@ -58,8 +58,8 @@ int main() {
 	
 
 	namedWindow("Left image keypoints", WINDOW_NORMAL);
-	imshow("Left image keypoints", img12);
-	waitKey();
+	// imshow("Left image keypoints", img12);
+	// waitKey();
 
 	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::FLANNBASED);	//https://docs.opencv.org/3.4/db/d39/classcv_1_1DescriptorMatcher.html#a179cbdf6c8de32f44ae7d5593996e77eaf73d671c6860c24f44b2880a77fadcdc
 	std::vector< std::vector<DMatch> > knn_matches;
@@ -71,15 +71,15 @@ int main() {
 		if (match[0].distance < ratio_thresh * match[1].distance)
 			good_matches.emplace_back(match[0]);
 	}
-	std::cout << "Number of good matches�G" << good_matches.size() << "\n";
+	std::cout << "Number of good matches " << good_matches.size() << "\n";
 
 #ifdef DRAW_MATCHES
 	Mat img_matches;
 	drawMatches(img1, keypoints1, img2, keypoints2, good_matches, img_matches, Scalar::all(-1),
 				Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 	namedWindow("Good Matches", WINDOW_NORMAL);
-	imshow("Good Matches", img_matches);
-	waitKey();
+	// imshow("Good Matches", img_matches);
+	// waitKey();
 #endif
 
 	size_t matchSize = good_matches.size();
@@ -171,11 +171,12 @@ int main() {
 		auto Nb = B.transpose() * B;
 		W = -(A * L);
 		xbar = Nb.inverse() * B.transpose() * Na.inverse() * W;
-		pos_r(1, 0) += xbar(1, 0);
-		pos_r(2, 0) += xbar(2, 0);
-		rot_r(0, 0) += xbar(3, 0);
-		rot_r(1, 0) += xbar(4, 0);
-		rot_r(2, 0) += xbar(5, 0);
+		pos_r(1, 0) += xbar(0, 0);
+		pos_r(2, 0) += xbar(1, 0);
+		rot_r(0, 0) += xbar(2, 0);
+		rot_r(1, 0) += xbar(3, 0);
+// std::cout << "\n=============== test ================" << std::endl;
+		rot_r(2, 0) += xbar(4, 0);
 
 		protectNumber++;
 		std::cout << "\rProtect number = " << protectNumber << std::flush;
@@ -186,7 +187,6 @@ int main() {
 				break;
 			}
 		}
-
 	} while (protectNumber < 1000 && !endCondition);
 
 	auto V = A.transpose() * Na.inverse() * (W - B * xbar);
