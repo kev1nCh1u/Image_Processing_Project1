@@ -4,7 +4,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/xfeatures2d.hpp>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 #define DRAW_MATCHES
 
@@ -49,8 +49,8 @@ int main() {
 	Mat descriptors1, descriptors2;
 	detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
 	detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
-	std::cout << "Number of key points in left image�G" << keypoints1.size() << "\n";
-	std::cout << "Number of key points in right image�G" << keypoints2.size() << "\n";
+	std::cout << "Number of key points in left image" << keypoints1.size() << "\n";
+	std::cout << "Number of key points in right image" << keypoints2.size() << "\n";
 	
 	Mat img12(cv::Size(img1.cols + img2.cols, img1.rows), CV_8UC3);
 	drawKeypoints(img1, keypoints1, img12(cv::Rect(0, 0, img1.cols, img1.rows)), Scalar(0, 255, 255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
