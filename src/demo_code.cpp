@@ -45,19 +45,19 @@ int main()
 		return -1;
 	}
 
-	// int hessianThreshold = 600; //https://stackoverflow.com/questions/17613723/what-is-the-meaning-of-minhessian-surffeaturedetector
-	// Ptr<SURF> detector = SURF::create(hessianThreshold);
-	// std::vector<KeyPoint> keypoints1, keypoints2;
-	// Mat descriptors1, descriptors2;
-	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
-	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
-
-	int numFeatures = 100;
-	Ptr<SIFT> detector = SIFT::create();
+	int hessianThreshold = 600; //https://stackoverflow.com/questions/17613723/what-is-the-meaning-of-minhessian-surffeaturedetector
+	Ptr<SURF> detector = SURF::create(hessianThreshold);
 	std::vector<KeyPoint> keypoints1, keypoints2;
 	Mat descriptors1, descriptors2;
 	detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
 	detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
+
+	// int numFeatures = 100;
+	// Ptr<SIFT> detector = SIFT::create();
+	// std::vector<KeyPoint> keypoints1, keypoints2;
+	// Mat descriptors1, descriptors2;
+	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
+	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
 
 	// Ptr<FeatureDetector> detector = ORB::create();
 	// std::vector<KeyPoint> keypoints1, keypoints2;
@@ -73,8 +73,9 @@ int main()
 	drawKeypoints(img2, keypoints2, img12(cv::Rect(img1.cols, 0, img2.cols, img2.rows)), Scalar(0, 255, 255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
 	namedWindow("Left image keypoints", WINDOW_NORMAL);
-	imshow("Left image keypoints", img12);
-	waitKey();
+	imwrite("Left_image_keypoints.jpg", img12);
+	// imshow("Left image keypoints", img12);
+	// waitKey();
 
 	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::FLANNBASED); //https://docs.opencv.org/3.4/db/d39/classcv_1_1DescriptorMatcher.html#a179cbdf6c8de32f44ae7d5593996e77eaf73d671c6860c24f44b2880a77fadcdc
 	std::vector<std::vector<DMatch>> knn_matches;
@@ -94,8 +95,9 @@ int main()
 	drawMatches(img1, keypoints1, img2, keypoints2, good_matches, img_matches, Scalar::all(-1),
 				Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 	namedWindow("Good Matches", WINDOW_NORMAL);
-	imshow("Good Matches", img_matches);
-	waitKey();
+	imwrite("Good_Matches.jpg", img_matches);
+	// imshow("Good Matches", img_matches);
+	// waitKey();
 #endif
 
 	// cv::BFMatcher matcher(cv::NORM_L2, true);
@@ -219,7 +221,7 @@ int main()
 				break;
 			}
 		}
-	} while (protectNumber < 5 && !endCondition);
+	} while (protectNumber < 500 && !endCondition);
 
 	auto V = A.transpose() * Na.inverse() * (W - B * xbar);
 	std::cout << "\n==========pos==========\n"
