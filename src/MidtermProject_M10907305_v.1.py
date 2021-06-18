@@ -30,7 +30,7 @@ class Panorama_Stitching :
             if values ==4:
                 self.Perspective_img2 = cv2.warpPerspective(img,self.H,(img_right.shape[1]+img_left.shape[1],img_right.shape[0]))
                 cv2.imshow('1',self.Perspective_img2)
-            # cv2.imshow('img1',self.Perspective_img1)
+            cv2.imshow('img1',self.Perspective_img1)
             
             #prcessing overlapping problem.
             img_ = cv2.copyMakeBorder(img_left.copy(),0,0,0,int(self.Perspective_img1.shape[1]-img_left.shape[1]),cv2.BORDER_CONSTANT)
@@ -56,7 +56,7 @@ class Panorama_Stitching :
 if __name__=='__main__':
     #read image and resize image. 
     img1 = cv2.imread('img/DJI_1.JPG')
-    img2 = cv2.imread('img/DJI_1.JPG') 
+    img2 = cv2.imread('img/DJI_2.JPG') 
     # img3 = cv2.imread('002.JPG')
     # img4 = cv2.imread('001.JPG')
 
