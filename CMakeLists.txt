@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project( ImageProject1 )
 
-set(OpenCV_DIR /home/user/opencv/opencv3/build)
+# set(OpenCV_DIR /home/user/opencv/opencv3/build)
+set(OpenCV_DIR /home/kevin/lib/opencv3.4.14/build)
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
