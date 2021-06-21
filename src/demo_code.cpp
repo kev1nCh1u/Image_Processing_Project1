@@ -45,12 +45,12 @@ int main()
 		return -1;
 	}
 
-	int hessianThreshold = 600; //https://stackoverflow.com/questions/17613723/what-is-the-meaning-of-minhessian-surffeaturedetector
-	Ptr<SURF> detector = SURF::create(hessianThreshold);
-	std::vector<KeyPoint> keypoints1, keypoints2;
-	Mat descriptors1, descriptors2;
-	detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
-	detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
+	// int hessianThreshold = 600; //https://stackoverflow.com/questions/17613723/what-is-the-meaning-of-minhessian-surffeaturedetector
+	// Ptr<SURF> detector = SURF::create(hessianThreshold);
+	// std::vector<KeyPoint> keypoints1, keypoints2;
+	// Mat descriptors1, descriptors2;
+	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
+	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
 
 	// int numFeatures = 100;
 	// Ptr<SIFT> detector = SIFT::create();
@@ -59,14 +59,22 @@ int main()
 	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
 	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
 
-	// Ptr<FeatureDetector> detector = ORB::create();
-	// std::vector<KeyPoint> keypoints1, keypoints2;
-	// Mat descriptors1, descriptors2;
-	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
-	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
+	Ptr<FeatureDetector> detector = ORB::create();
+	std::vector<KeyPoint> keypoints1, keypoints2;
+	Mat descriptors1, descriptors2;
+	detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
+	detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
 
 	std::cout << "Number of key points in left image " << keypoints1.size() << "\n";
 	std::cout << "Number of key points in right image " << keypoints2.size() << "\n";
+
+	if(descriptors1.type()!=CV_32F) {
+		descriptors1.convertTo(descriptors1, CV_32F);
+	}
+
+	if(descriptors2.type()!=CV_32F) {
+		descriptors2.convertTo(descriptors2, CV_32F);
+	}
 
 	Mat img12(cv::Size(img1.cols + img2.cols, img1.rows), CV_8UC3);
 	drawKeypoints(img1, keypoints1, img12(cv::Rect(0, 0, img1.cols, img1.rows)), Scalar(0, 255, 255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
@@ -222,11 +230,16 @@ int main()
 			}
 		}
 	} while (protectNumber < 500 && !endCondition);
+	std::cout << std::endl;
 
 	auto V = A.transpose() * Na.inverse() * (W - B * xbar);
-	std::cout << "\n==========pos==========\n"
-			  << pos_r << "\n==========rot==========\n"
-			  << rot_r << "\n";
+	// std::cout << "\n==========pos==========\n"
+	// 		  << pos_r << "\n==========rot==========\n"
+	// 		  << rot_r << "\n";
+
+	std::cout << "x \t y \t z \t o \t p \t k \n"
+			  << pos_r(0, 0) << "\t" << pos_r(1, 0) << "\t" << pos_r(2, 0) << "\t"
+			  << rot_r(0, 0) << "\t" << rot_r(1, 0) << "\t" << rot_r(2, 0) << "\n";
 
 	return 0;
 }
