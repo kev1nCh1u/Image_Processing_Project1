@@ -59,7 +59,8 @@ int main()
 	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
 	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
 
-	Ptr<FeatureDetector> detector = ORB::create();
+	int numFeatures = 5000;
+	Ptr<FeatureDetector> detector = ORB::create(numFeatures);
 	std::vector<KeyPoint> keypoints1, keypoints2;
 	Mat descriptors1, descriptors2;
 	detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
@@ -81,7 +82,7 @@ int main()
 	drawKeypoints(img2, keypoints2, img12(cv::Rect(img1.cols, 0, img2.cols, img2.rows)), Scalar(0, 255, 255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
 	namedWindow("Left image keypoints", WINDOW_NORMAL);
-	imwrite("Left_image_keypoints.jpg", img12);
+	imwrite("img/Left_image_keypoints.jpg", img12);
 	// imshow("Left image keypoints", img12);
 	// waitKey();
 
@@ -103,7 +104,7 @@ int main()
 	drawMatches(img1, keypoints1, img2, keypoints2, good_matches, img_matches, Scalar::all(-1),
 				Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 	namedWindow("Good Matches", WINDOW_NORMAL);
-	imwrite("Good_Matches.jpg", img_matches);
+	imwrite("img/Good_Matches.jpg", img_matches);
 	// imshow("Good Matches", img_matches);
 	// waitKey();
 #endif
@@ -237,9 +238,8 @@ int main()
 	// 		  << pos_r << "\n==========rot==========\n"
 	// 		  << rot_r << "\n";
 
-	std::cout << "x \t y \t z \t o \t p \t k \n"
-			  << pos_r(0, 0) << "\t" << pos_r(1, 0) << "\t" << pos_r(2, 0) << "\t"
-			  << rot_r(0, 0) << "\t" << rot_r(1, 0) << "\t" << rot_r(2, 0) << "\n";
+	std::cout << "x:" << pos_r(0, 0) << "\t y:" << pos_r(1, 0) << "\t z:" << pos_r(2, 0) 
+			  << "\t o:" << rot_r(0, 0) << "\t p:" << rot_r(1, 0) << "\t k:" << rot_r(2, 0) << "\n";
 
 	return 0;
 }
