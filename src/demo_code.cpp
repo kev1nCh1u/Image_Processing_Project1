@@ -45,12 +45,12 @@ int main()
 		return -1;
 	}
 
-	// int hessianThreshold = 600; //https://stackoverflow.com/questions/17613723/what-is-the-meaning-of-minhessian-surffeaturedetector
-	// Ptr<SURF> detector = SURF::create(hessianThreshold);
-	// std::vector<KeyPoint> keypoints1, keypoints2;
-	// Mat descriptors1, descriptors2;
-	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
-	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
+	int hessianThreshold = 600; //https://stackoverflow.com/questions/17613723/what-is-the-meaning-of-minhessian-surffeaturedetector
+	Ptr<SURF> detector = SURF::create(hessianThreshold);
+	std::vector<KeyPoint> keypoints1, keypoints2;
+	Mat descriptors1, descriptors2;
+	detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
+	detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
 
 	// int numFeatures = 100;
 	// Ptr<SIFT> detector = SIFT::create();
@@ -59,12 +59,12 @@ int main()
 	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
 	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
 
-	int numFeatures = 5000;
-	Ptr<FeatureDetector> detector = ORB::create(numFeatures);
-	std::vector<KeyPoint> keypoints1, keypoints2;
-	Mat descriptors1, descriptors2;
-	detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
-	detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
+	// int numFeatures = 5000;
+	// Ptr<FeatureDetector> detector = ORB::create(numFeatures);
+	// std::vector<KeyPoint> keypoints1, keypoints2;
+	// Mat descriptors1, descriptors2;
+	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
+	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
 
 	std::cout << "Number of key points in left image " << keypoints1.size() << "\n";
 	std::cout << "Number of key points in right image " << keypoints2.size() << "\n";
