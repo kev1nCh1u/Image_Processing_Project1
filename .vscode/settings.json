@@ -65,5 +65,5 @@
         "string": "cpp",
         "string_view": "cpp"
     },
-    "python.pythonPath": "C:\\Users\\kevin\\AppData\\Local\\Programs\\Python\\Python37\\python.exe"
+    "python.pythonPath": "/usr/bin/python3"
 }

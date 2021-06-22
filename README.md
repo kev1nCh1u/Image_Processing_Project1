@@ -1,5 +1,13 @@
 # Image_Processing_Project1
 
+
+## start
+    mkdir build
+    cd build
+    cmake ..
+    make
+    ./ImageProject1
+
 ## python install
     pip install numpy
     pip install opencv-python

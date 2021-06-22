@@ -37,8 +37,8 @@ void pixel2photo(const std::vector<DMatch> &matches, const std::pair<uint, uint>
 
 int main()
 {
-	Mat img1 = imread("img/DJI_1.JPG", IMREAD_GRAYSCALE);
-	Mat img2 = imread("img/DJI_2.JPG", IMREAD_GRAYSCALE);
+	Mat img1 = imread("../img/DJI_1.JPG", IMREAD_GRAYSCALE);
+	Mat img2 = imread("../img/DJI_2.JPG", IMREAD_GRAYSCALE);
 	if (img1.empty() || img2.empty())
 	{
 		std::cout << "Can't open the images!\n";
@@ -82,7 +82,7 @@ int main()
 	drawKeypoints(img2, keypoints2, img12(cv::Rect(img1.cols, 0, img2.cols, img2.rows)), Scalar(0, 255, 255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
 	namedWindow("Left image keypoints", WINDOW_NORMAL);
-	imwrite("img/Left_image_keypoints.jpg", img12);
+	imwrite("../img/Left_image_keypoints.jpg", img12);
 	// imshow("Left image keypoints", img12);
 	// waitKey();
 
@@ -104,7 +104,7 @@ int main()
 	drawMatches(img1, keypoints1, img2, keypoints2, good_matches, img_matches, Scalar::all(-1),
 				Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 	namedWindow("Good Matches", WINDOW_NORMAL);
-	imwrite("img/Good_Matches.jpg", img_matches);
+	imwrite("../img/Good_Matches.jpg", img_matches);
 	// imshow("Good Matches", img_matches);
 	// waitKey();
 #endif
