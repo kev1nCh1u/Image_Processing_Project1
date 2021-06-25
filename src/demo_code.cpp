@@ -5,6 +5,7 @@
 #include <opencv2/features2d.hpp>
 #include <opencv2/xfeatures2d.hpp>
 #include <eigen3/Eigen/Dense>
+#include <string>
 
 #define DRAW_MATCHES
 
@@ -41,33 +42,42 @@ int main()
 	Mat img2 = imread("../img/DJI_2.JPG", IMREAD_GRAYSCALE);
 	if (img1.empty() || img2.empty())
 	{
-		std::cout << "Can't open the images!\n";
+		std::cout << "can't open the images!\n";
 		return -1;
 	}
+	std::cout << "open image finish\n";
 
-	int hessianThreshold = 600; //https://stackoverflow.com/questions/17613723/what-is-the-meaning-of-minhessian-surffeaturedetector
-	Ptr<SURF> detector = SURF::create(hessianThreshold);
-	std::vector<KeyPoint> keypoints1, keypoints2;
-	Mat descriptors1, descriptors2;
-	detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
-	detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
+	// std::string detectorType = "surf";
+	// int numFeatures = 600; //https://stackoverflow.com/questions/17613723/what-is-the-meaning-of-minhessian-surffeaturedetector
+	// const float ratio_thresh = 0.4f;
+	// Ptr<SURF> detector = SURF::create(numFeatures);
+	// std::vector<KeyPoint> keypoints1, keypoints2;
+	// Mat descriptors1, descriptors2;
+	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
+	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
 
-	// int numFeatures = 100;
+	// std::string detectorType = "sift";
+	// int numFeatures = 500;
+	// const float ratio_thresh = 0.3f;
 	// Ptr<SIFT> detector = SIFT::create();
 	// std::vector<KeyPoint> keypoints1, keypoints2;
 	// Mat descriptors1, descriptors2;
 	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
 	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
 
-	// int numFeatures = 5000;
-	// Ptr<FeatureDetector> detector = ORB::create(numFeatures);
-	// std::vector<KeyPoint> keypoints1, keypoints2;
-	// Mat descriptors1, descriptors2;
-	// detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
-	// detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
+	std::string detectorType = "orb";
+	int numFeatures = 5000;
+	const float ratio_thresh = 0.8f;
+	Ptr<FeatureDetector> detector = ORB::create(numFeatures);
+	std::vector<KeyPoint> keypoints1, keypoints2;
+	Mat descriptors1, descriptors2;
+	detector->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
+	detector->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
 
-	std::cout << "Number of key points in left image " << keypoints1.size() << "\n";
-	std::cout << "Number of key points in right image " << keypoints2.size() << "\n";
+	std::cout << "detector: " << detectorType << "\n";
+	std::cout << "numFeatures: "  << numFeatures << "\n";
+	std::cout << "left image key points: " << keypoints1.size() << "\n";
+	std::cout << "right image key points: " << keypoints2.size() << "\n";
 
 	if(descriptors1.type()!=CV_32F) {
 		descriptors1.convertTo(descriptors1, CV_32F);
@@ -81,31 +91,31 @@ int main()
 	drawKeypoints(img1, keypoints1, img12(cv::Rect(0, 0, img1.cols, img1.rows)), Scalar(0, 255, 255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 	drawKeypoints(img2, keypoints2, img12(cv::Rect(img1.cols, 0, img2.cols, img2.rows)), Scalar(0, 255, 255), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
-	namedWindow("Left image keypoints", WINDOW_NORMAL);
-	imwrite("../img/Left_image_keypoints.jpg", img12);
-	// imshow("Left image keypoints", img12);
+	namedWindow("left_image_keypoints", WINDOW_NORMAL);
+	imwrite("../img/"+ detectorType + "_left_image_keypoints.jpg", img12);
+	// imshow("left_image_keypoints", img12);
 	// waitKey();
 
 	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::FLANNBASED); //https://docs.opencv.org/3.4/db/d39/classcv_1_1DescriptorMatcher.html#a179cbdf6c8de32f44ae7d5593996e77eaf73d671c6860c24f44b2880a77fadcdc
 	std::vector<std::vector<DMatch>> knn_matches;
 	matcher->knnMatch(descriptors1, descriptors2, knn_matches, 2);
 
-	const float ratio_thresh = 0.4f;
+	std::cout << "distance ratio: " << ratio_thresh << "\n";
 	std::vector<DMatch> good_matches;
 	for (auto &match : knn_matches)
 	{
 		if (match[0].distance < ratio_thresh * match[1].distance)
 			good_matches.emplace_back(match[0]);
 	}
-	std::cout << "Number of good matches " << good_matches.size() << "\n";
+	std::cout << "good matches num: " << good_matches.size() << "\n";
 
 #ifdef DRAW_MATCHES
 	Mat img_matches;
 	drawMatches(img1, keypoints1, img2, keypoints2, good_matches, img_matches, Scalar::all(-1),
 				Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-	namedWindow("Good Matches", WINDOW_NORMAL);
-	imwrite("../img/Good_Matches.jpg", img_matches);
-	// imshow("Good Matches", img_matches);
+	namedWindow("good_matches", WINDOW_NORMAL);
+	imwrite("../img/"+ detectorType + "_good_matches.jpg", img_matches);
+	// imshow("good_matches", img_matches);
 	// waitKey();
 #endif
 
@@ -141,6 +151,9 @@ int main()
 	Eigen::MatrixXf Na(matchSize, matchSize);
 	Eigen::MatrixXf W(matchSize, 1);
 	Eigen::MatrixXf xbar(5, 1);
+
+	double stopVal = 1e-6;
+	std::cout << "if > " << stopVal << " stop" << std::endl;
 
 	uint protectNumber = 0;
 	bool endCondition;
@@ -220,11 +233,11 @@ int main()
 		rot_r(2, 0) += xbar(4, 0);
 
 		protectNumber++;
-		std::cout << "\rProtect number = " << protectNumber << std::flush;
+		std::cout << "\r"  << " protect number: " << protectNumber << " xbar: " << xbar(0, 0) << std::flush;
 		endCondition = 1;
 		for (size_t i = 0; i < xbar.rows(); ++i)
 		{
-			if (xbar(i, 0) > 1e-6)
+			if (xbar(i, 0) > stopVal)
 			{
 				endCondition = 0;
 				break;

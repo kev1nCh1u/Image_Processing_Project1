@@ -63,7 +63,10 @@
         "random": "cpp",
         "set": "cpp",
         "string": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "bit": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp"
     },
     "python.pythonPath": "/usr/bin/python3"
 }
