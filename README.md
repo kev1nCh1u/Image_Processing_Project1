@@ -24,5 +24,12 @@ https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html
 
     sudo apt install pkg-config
 
-### git ignore defore
+## git ignore defore
     git rm -rf --cached .
+
+## tools
+vcpkg is a cross-platform open source package manager by Microsoft.
+https://github.com/microsoft/vcpkg
+
+OpenMP(OMP)
+https://docs.microsoft.com/zh-tw/cpp/parallel/openmp/reference/openmp-functions?view=msvc-160
